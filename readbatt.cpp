@@ -50,6 +50,7 @@ extern int batteryCapacity[16];
 
 READBATT::READBATT()
 {
+<<<<<<< HEAD
     // Read config so that usbSerialID/usbVendorID are populated before open_serial() decides
     // which interface to use.
     readConfigFromJson();
@@ -59,6 +60,12 @@ READBATT::READBATT()
     // otherwise it falls back to the onboard UART /dev/ttyAMA0.
     // take care of the comments in pylonmonitor.cpp: remapping of serial port
     // the serial console must be switched OFF when using ttyAMA0
+=======
+    // initialize and open the RPI's internal serial interface
+    // this uses the primary serial interface on the RPI board
+    // take care of the comments in pylonmonitor.cpp: remapping of serial port
+    // the serial console must be switched OFF
+>>>>>>> a0d9016 (init)
     open_serial(B115200);
 
     // create a thread that handles reading from the battery

@@ -18,6 +18,9 @@ extern string publishTopic;
 extern string responseTopic;
 extern string locationTopic;
 extern string deviceTopic;
+<<<<<<< HEAD
 extern string usbSerialID;
 extern string usbVendorID;
+=======
+>>>>>>> a0d9016 (init)
 extern bool mqtt_changed;
