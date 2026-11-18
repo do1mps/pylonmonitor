@@ -139,10 +139,15 @@ void MQTTTHREAD::on_disconnect(struct mosquitto *mosq, void *userdata, int rc)
 
 void MQTTTHREAD::publish()
 {
-    if (mqttclient == nullptr) return;
+    if (mqttclient == nullptr)
+    {
+        printf("MQTT publish: mqttclient is null, skipping\n");
+        return;
+    }
 
     string topic;
     string payload;
+    int count = 0;
 
     while (read_from_readbatt(topic, payload))
     {
@@ -151,11 +156,18 @@ void MQTTTHREAD::publish()
             ret = mosquitto_publish(mqttclient, NULL, topic.c_str(), 0, NULL, 0, false);
         else
             ret = mosquitto_publish(mqttclient, NULL, topic.c_str(), payload.length(), payload.c_str(), 0, false);
+
+        count++;
         if (ret != MOSQ_ERR_SUCCESS)
         {
+            printf("MQTT publish FAILED after %d messages, topic=<%s>, ret=%d (%s)\n",
+                   count, topic.c_str(), ret, mosquitto_strerror(ret));
             connected = false;
             return;
         }
     }
+
+    if (count > 0)
+        printf("MQTT publish: sent %d messages\n", count);
 }
 

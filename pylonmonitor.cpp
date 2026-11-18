@@ -116,6 +116,8 @@ int main(int argc, char *argv[])
         if(mqttthread.isConnected() == false || mqtt_changed) {
             time_t now = time(NULL);
             if (now - lastMQTTConnectionTime >= 2) {
+                printf("MQTT (re)connect triggered: connected=%d mqtt_changed=%d\n",
+                       mqttthread.isConnected(), mqtt_changed);
                 mqttthread.init();
                 lastMQTTConnectionTime = now;
                 mqtt_changed = false;
