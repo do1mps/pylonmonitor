@@ -337,8 +337,15 @@ void READBATT::publishBattdata()
     // publish the sensor information
     json_t *root = json_object();
 
+    // Build ISO-8601 UTC timestamp  yyyy-mm-ddThh:mi:ssZ
+    char timestamp[25];
+    time_t now_ts = time(nullptr);
+    struct tm *utc = gmtime(&now_ts);
+    strftime(timestamp, sizeof(timestamp), "%Y-%m-%dT%H:%M:%SZ", utc);
+
     // Set key-value pairs in the JSON object
     json_object_set_new(root, "Name", json_string("Pylontech Akku Monitor"));
+    json_object_set_new(root, "timestamp", json_string(timestamp));
     json_object_set_new(root, "IP", json_string(myLocalIP.c_str()));
     json_object_set_new(root, "SSID", json_string(get_ssid().c_str()));
     json_object_set_new(root, "RSSI", json_integer(get_rssi()));
