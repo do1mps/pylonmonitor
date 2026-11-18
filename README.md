@@ -11,6 +11,8 @@ Connect the Console connector of the master battery to the primary serial interf
 
 ![serial Interface and Connection](pics/serpin.png)
 
+A pre-build USB-to-RJ45 Console Cable is working fine too. The setup gives the possibility to choose the right usb-serial Port.
+
 ## Install required libraries:
 Run the script named `prepare` to install necessary libraries.
 
@@ -61,3 +63,7 @@ After these steps, no further data will be written to the SD card, significantly
 ## Web Interface:
 
 ![Screenshot of Pylontech Battery Monitor](pics/screenshot.png)
+
+# Big Thanks
+a big Thank you goes to DJ0ABR for sharing his version!
+
