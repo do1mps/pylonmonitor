@@ -79,6 +79,7 @@ void install_signal_handler(void (*signalfunction)())
 }
 
 // get own IP adress
+// Priority: wlan0 first, then any other non-loopback IPv4 interface (e.g. eth0)
 char* ownIP()
 {
     static char ip[20] = {0};
@@ -91,24 +92,37 @@ char* ownIP()
         exit(1);
     }
 
+    ip[0] = '\0';
+
+    // First pass: prefer wlan0
     for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next)
     {
-        if (ifa->ifa_addr == NULL)
-            continue;
+        if (ifa->ifa_addr == NULL) continue;
         if (ifa->ifa_addr->sa_family == AF_INET
             && strcmp(ifa->ifa_name, "wlan0") == 0)
         {
             int s = getnameinfo(ifa->ifa_addr, sizeof(struct sockaddr_in),
                                 host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
-            if (s != 0)
-            {
-                printf("getnameinfo() failed: %s\n", gai_strerror(s));
-                continue;
-            }
-            strcpy(ip, host);
-            break;
+            if (s == 0) { strcpy(ip, host); break; }
         }
     }
+
+    // Second pass: fall back to first non-loopback IPv4 interface
+    if (ip[0] == '\0')
+    {
+        for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next)
+        {
+            if (ifa->ifa_addr == NULL) continue;
+            if (ifa->ifa_addr->sa_family == AF_INET
+                && strcmp(ifa->ifa_name, "lo") != 0)
+            {
+                int s = getnameinfo(ifa->ifa_addr, sizeof(struct sockaddr_in),
+                                    host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+                if (s == 0) { strcpy(ip, host); break; }
+            }
+        }
+    }
+
     freeifaddrs(ifaddr);
     return ip;
 }
