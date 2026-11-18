@@ -17,6 +17,7 @@ MQTTTHREAD::MQTTTHREAD()
 bool MQTTTHREAD::init()
 {
     cleanup();
+    flush_mqtt_queue();
 
     getMQTTtopic();
     
@@ -136,7 +137,7 @@ void MQTTTHREAD::on_message(struct mosquitto *mosq, void *userdata, const struct
 void MQTTTHREAD::on_disconnect(struct mosquitto *mosq, void *userdata, int rc)
 {
     printf("\nDisconnected from MQTT Broker. Reconnect ...\n");
-    //connected = false;
+    connected = false;
     
     if (rc != 0) { // Ungeplanter Disconnect
         int ret = mosquitto_reconnect(mosq);

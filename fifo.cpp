@@ -23,7 +23,8 @@ boost::lockfree::spsc_queue<Message, boost::lockfree::capacity<queue_size>> mqtt
 
 void send_to_mqtt(const string& topic, const string& payload)
 {
-    mqttqueue.push(Message(topic,payload));
+    if (!mqttqueue.push(Message(topic,payload)))
+        printf("MQTT queue full, message dropped: %s\n", topic.c_str());
 }
 
 bool read_from_readbatt(string& topic, string& payload)
@@ -37,4 +38,13 @@ bool read_from_readbatt(string& topic, string& payload)
     }
 
     return ret;
+}
+
+void flush_mqtt_queue()
+{
+    Message message("", "");
+    int count = 0;
+    while (mqttqueue.pop(message)) count++;
+    if (count > 0)
+        printf("MQTT queue flushed (%d messages discarded)\n", count);
 }

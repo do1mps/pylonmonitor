@@ -310,8 +310,8 @@ void READBATT::publishBattdata()
     static time_t last_execution_time;
     time_t current_time;
     double elapsed_time;
-    double sum = 0.0;
-    int num_measurements = 0;
+    static double sum = 0.0;
+    static int num_measurements = 0;
 
     current_time = time(nullptr);
     elapsed_time = difftime(current_time, last_execution_time);
