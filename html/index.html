@@ -62,6 +62,18 @@
     background-color: #101010;
 }
 
+.cell-min {
+    background-color: #7a0000 !important;
+    color: #ffaaaa !important;
+    font-weight: bold;
+}
+
+.cell-max {
+    background-color: #004d00 !important;
+    color: #aaffaa !important;
+    font-weight: bold;
+}
+
 .cellinfo { 
     font-family:verdana; font-size:16px; color:rgb(255, 255, 255); font-weight: bold; text-align:left;
     margin-bottom: 10px;
@@ -251,6 +263,8 @@
 
             // Populate the table with battery data
             if (i === 0) cellanz = 0;
+            volt_cells[battery.battery] = [];
+            soc_cells[battery.battery]  = [];
             for (var j = 0; j < battery.voltage.length; j++) {
                 var row = document.createElement("tr");
 
@@ -267,6 +281,7 @@
                 sum_volt += batt_volt[battery.battery][j];
                 voltageCell.textContent = battery.voltage[j].toFixed(3);
                 row.appendChild(voltageCell);
+                volt_cells[battery.battery][j] = voltageCell;
 
                 var temperatureCell = document.createElement("td");
                 mid_temp += battery.temperature[j];
@@ -278,6 +293,7 @@
                 mid_soc += batt_soc[battery.battery][j];
                 socCell.textContent = battery.SoC[j];
                 row.appendChild(socCell);
+                soc_cells[battery.battery][j] = socCell;
 
                 var chargeCell = document.createElement("td");
                 batt_charge[battery.battery][j] = battery.charge[j];
@@ -345,6 +361,10 @@
     var battanz = 0;
     var cellanz = 0;
 
+    // DOM references for min/max highlighting
+    var volt_cells = [];   // volt_cells[b][c] = <td> element
+    var soc_cells  = [];   // soc_cells[b][c]  = <td> element
+
     var minVvolt = 10000;
     var maxVvolt = -10000;
     var minSoC = 10000;
@@ -395,6 +415,23 @@
         }
         var diffVolt = maxVvolt - minVvolt;
         diffVolt *= 1000;   // mV
+
+        // Mark min/max cells in the tables
+        for (var b = 0; b < battanz; b++) {
+            if (!volt_cells[b]) continue;
+            for (var c = 0; c < cellanz; c++) {
+                if (volt_cells[b][c]) {
+                    volt_cells[b][c].classList.remove('cell-min', 'cell-max');
+                    if (batt_volt[b][c] === minVvolt) volt_cells[b][c].classList.add('cell-min');
+                    else if (batt_volt[b][c] === maxVvolt) volt_cells[b][c].classList.add('cell-max');
+                }
+                if (soc_cells[b][c]) {
+                    soc_cells[b][c].classList.remove('cell-min', 'cell-max');
+                    if (batt_soc[b][c] === minSoC) soc_cells[b][c].classList.add('cell-min');
+                    else if (batt_soc[b][c] === maxSoC) soc_cells[b][c].classList.add('cell-max');
+                }
+            }
+        }
 
         var titleElement = document.getElementById("mytitle");
         var titleText = "Pylontech Battery Monitor (" + (Number(total)/1000).toFixed(3) + " kWh)";
