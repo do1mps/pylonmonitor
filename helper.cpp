@@ -152,7 +152,7 @@ string exec(const char* cmd) {
 }
 
 string get_ssid() {
-    string output = exec("iwconfig wlan0");
+    string output = exec("iwconfig wlan0 2>/dev/null");
     // Check if WLAN is not used or the output indicates an inactive state
     if (output.find("No such device") != string::npos ||
         output.find("not associated") != string::npos) {
@@ -176,7 +176,7 @@ string get_ssid() {
 // Function to get the RSSI of the connected AP
 int get_rssi() 
 {
-    string output = exec("iwconfig wlan0");
+    string output = exec("iwconfig wlan0 2>/dev/null");
     size_t pos = output.find("Signal level=");
     if (pos != string::npos) {
         string rssi_str = output.substr(pos + 13, 3); // Extract RSSI value

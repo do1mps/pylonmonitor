@@ -333,7 +333,7 @@ pthread_cond_t	semaphore[NUM_OF_PIPES];
 #define UNLOCK(pn)	pthread_mutex_unlock(&(crit_sec[pn]))
 #define WAKEUP(pn)	pthread_cond_signal(&(semaphore[pn]));
 
-#define BUFFER_LENGTH 1000
+#define BUFFER_LENGTH 32768  // increased from 1000; must hold a full reply round for up to 64 batteries (~400 bytes each)
 
 int wridx[NUM_OF_PIPES];
 int rdidx[NUM_OF_PIPES];
