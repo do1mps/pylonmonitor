@@ -174,19 +174,24 @@ static int acttime = 0;
 
                 if(strstr(pylon_rxbuf,"Invalid")) {
                     // this bat num does not exist
-                    // restart with bat 1                    
+                    // battnum-1 is the highest confirmed battery
+                    printf("bat %d invalid, setting battnumber to %d\n", battnum, battnum-1);
+                    battnumber = battnum - 1;
                     battnum = 1;
                     // empty the RX buffer
                     while(read_serial() != -1) usleep(100);
                     acttime = 0;
-                    lasttime =0;
+                    lasttime = 0;
                     pylonState = PYLON_REQUEST;
                     return;
                 }
 
                 if (c == '>') {
                     // prompt received
-                    if(battnum > battnumber) battnumber = battnum;
+                    if(battnum > battnumber) {
+                        printf("battnumber updated: %d -> %d\n", battnumber, battnum);
+                        battnumber = battnum;
+                    }
                     pylon_rxbuf[rxidx] = 0;   // terminate string
                     //printf("{%s}\n",pylon_rxbuf);
                     processBatData();
@@ -203,10 +208,13 @@ static int acttime = 0;
         } else {
             // nothing received
             if(++timeout > 5000) {
-                // nothing received within 5s
-                printf("batt read timeout\n");
-                // repeat with the same battery
+                // nothing received within 5s, battery does not exist
+                printf("batt read timeout for bat %d, assuming it does not exist, resetting to bat 1\n", battnum);
+                battnumber = battnum - 1;
+                battnum = 1;
                 pylonState = PYLON_REQUEST;
+                acttime = 0;
+                lasttime = 0;
                 usleep(1000);
             }
         }
