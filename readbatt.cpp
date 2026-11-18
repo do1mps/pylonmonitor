@@ -332,9 +332,13 @@ void READBATT::publishBattdata()
     // create json file for local web page
     string batstr_json = convertPylonDataToJson();
     std::ofstream outFile("/var/www/html/wxdata/batteryinfo.json");
-    if (!outFile.is_open()) return;
-    outFile << batstr_json;
-    outFile.close();
+    if (!outFile.is_open())
+        printf("WARNING: cannot write batteryinfo.json, skipping web update (MQTT publish continues)\n");
+    else
+    {
+        outFile << batstr_json;
+        outFile.close();
+    }
 
     // publish the sensor information
     json_t *root = json_object();
