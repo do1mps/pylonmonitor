@@ -142,11 +142,14 @@ void copyFile()
     const std::string destinationPath = "/var/www/html/index.html";
 
     std::ifstream src(sourcePath, std::ios::binary);
-    std::ofstream dst(destinationPath, std::ios::binary);
+    if (!src.good()) {
+        std::cerr << "copyFile: cannot open source " << sourcePath << std::endl;
+        return;
+    }
 
-    // Check if the source file and destination file stream objects are good to go
-    if (!src.good() || !dst.good()) {
-        std::cerr << "Error opening files!" << std::endl;
+    std::ofstream dst(destinationPath, std::ios::binary);
+    if (!dst.good()) {
+        std::cerr << "copyFile: cannot open destination " << destinationPath << std::endl;
         return;
     }
 
