@@ -9,13 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "publishTopic" => $_POST['publishTopic'],
         "responseTopic" => $_POST['responseTopic'],
         "locationTopic" => $_POST['locationTopic'],
-<<<<<<< HEAD
         "deviceTopic" => $_POST['deviceTopic'],
         "usbSerialID" => $_POST['usbSerialID'] ?? '',
         "usbVendorID" => $_POST['usbVendorID'] ?? ''
-=======
-        "deviceTopic" => $_POST['deviceTopic']
->>>>>>> a0d9016 (init)
     );
 
     // Encode the data as JSON

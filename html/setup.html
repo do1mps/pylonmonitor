@@ -89,7 +89,6 @@
         text-align: center; /* Centers the text */
         margin-top: 20px; /* Adds some space above the copyright message */
     }
-<<<<<<< HEAD
 
     .usb-device-list {
         margin: 8px 0 16px;
@@ -146,8 +145,6 @@
         color: #666;
         margin-bottom: 4px;
     }
-=======
->>>>>>> a0d9016 (init)
 </style>
 
 <body>
@@ -179,7 +176,6 @@
         <label for="deviceTopic">Device Topic:</label><br>
         <input type="text" id="deviceTopic" name="deviceTopic" required><br>
 
-<<<<<<< HEAD
         <h2>Serial / USB Adapter</h2>
 
         <p style="font-size:13px; color:#555; margin:0 0 10px;">
@@ -208,8 +204,6 @@
         <label for="usbVendorID">USB Vendor ID:</label><br>
         <input type="text" id="usbVendorID" name="usbVendorID" placeholder="e.g. 0403"><br>
 
-=======
->>>>>>> a0d9016 (init)
         <input type="submit" value="SUBMIT">
         <button type="button" id="cancelButton" style="background-color: #dc3545; color: white; padding: 10px 20px; margin-top: 10px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px;">CANCEL</button>
     </form>
@@ -232,11 +226,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('responseTopic').value = data.responseTopic || '';
         document.getElementById('locationTopic').value = data.locationTopic || '';
         document.getElementById('deviceTopic').value = data.deviceTopic || '';
-<<<<<<< HEAD
         document.getElementById('usbSerialID').value = data.usbSerialID || '';
         document.getElementById('usbVendorID').value = data.usbVendorID || '';
-=======
->>>>>>> a0d9016 (init)
     })
     .catch(error => {
         console.error('There was a problem with your fetch operation:', error);
@@ -293,7 +284,6 @@ document.getElementById('cancelButton').addEventListener('click', function() {
     window.location.href = 'index.html';
 });
 
-<<<<<<< HEAD
 function scanDevices() {
     var status = document.getElementById('usbScanStatus');
     var listDiv = document.getElementById('usbDeviceList');
@@ -345,8 +335,6 @@ function escHtml(s) {
         .replace(/"/g, '&quot;');
 }
 
-=======
->>>>>>> a0d9016 (init)
 </script>
 
 </body>
