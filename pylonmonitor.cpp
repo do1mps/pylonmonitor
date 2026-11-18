@@ -62,6 +62,7 @@ web thread .... prepares the battery values for the webserver
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <mosquitto.h>
 #include "pylonmonitor.h"
 #include "readbatt.h"
 #include "mqttthread.h"
@@ -96,6 +97,9 @@ int main(int argc, char *argv[])
     // create default config, if it does not already exist
     saveDefaultConfigToJson();
 
+    // init mosquitto library once for the lifetime of the process
+    mosquitto_lib_init();
+
     // read the local IP address which is sent with an MQTT status message
     myLocalIP = std::string(ownIP());
 
@@ -129,9 +133,9 @@ int main(int argc, char *argv[])
 void exit_program()
 {
     printf("close program\n");
-    // do cleanup
     keeprunning = 0;
-    sleep(1);   // give threads a chance to exit
+    sleep(1);
+    mosquitto_lib_cleanup();
     printf("exit program\n");
     exit(0);
 }

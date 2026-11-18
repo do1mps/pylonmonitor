@@ -20,8 +20,6 @@ bool MQTTTHREAD::init()
     flush_mqtt_queue();
 
     getMQTTtopic();
-    
-    mosquitto_lib_init();
     mqttclient = mosquitto_new("Pylonmonitor", true, NULL);
     if (!mqttclient)
     {
@@ -90,8 +88,7 @@ void MQTTTHREAD::cleanup()
         mosquitto_disconnect(mqttclient);
         mosquitto_loop_stop(mqttclient, true);
         mosquitto_destroy(mqttclient);
-        mosquitto_lib_cleanup();
-        mqttclient = nullptr; // Set to nullptr after cleanup
+        mqttclient = nullptr;
     }
 }
 
@@ -142,6 +139,8 @@ void MQTTTHREAD::on_disconnect(struct mosquitto *mosq, void *userdata, int rc)
 
 void MQTTTHREAD::publish()
 {
+    if (mqttclient == nullptr) return;
+
     string topic;
     string payload;
 
