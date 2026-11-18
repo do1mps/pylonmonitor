@@ -307,21 +307,23 @@ void READBATT::publishBattdata()
     // return;
 
     // measure the interval and build an average value
-    static time_t last_execution_time;
-    time_t current_time;
-    double elapsed_time;
+    static time_t last_execution_time = 0;
     static double sum = 0.0;
     static int num_measurements = 0;
+    time_t current_time;
+    double elapsed_time;
 
     current_time = time(nullptr);
-    elapsed_time = difftime(current_time, last_execution_time);
+    elapsed_time = (last_execution_time == 0) ? 0.0 : difftime(current_time, last_execution_time);
     last_execution_time = current_time;
 
-    // build average
-    num_measurements++;
-    sum += elapsed_time;
+    // build average (skip the first call where elapsed_time is meaningless)
+    if (elapsed_time > 0.0) {
+        num_measurements++;
+        sum += elapsed_time;
+    }
 
-    int intervall = (int)(sum / num_measurements);
+    int intervall = (num_measurements > 0) ? (int)(sum / num_measurements) : 0;
     if (num_measurements >= 10) {
         sum = 0.0;
         num_measurements = 0;
